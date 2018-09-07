@@ -23,7 +23,7 @@ class CustomIndexBanner
         if (is_admin() && is_user_logged_in()) {
             // メニュー追加
             add_action('admin_menu', [$this, 'set_plugin_menu']);
-            add_action('admin_sub_menu', [$this, 'set_plugin_sub_menu']);
+            add_action('admin_menu', [$this, 'set_plugin_sub_menu']);
 
         }
     }
@@ -43,13 +43,27 @@ class CustomIndexBanner
     function set_plugin_sub_menu() {
 
         add_submenu_page(
-            'es-custom-index',  /* 親メニュー */
+            'custom-index-banner',  /* 親メニュー */
             '設定',
             '設定',
             'manage_options',
             'custom-index-banner-config',
             [$this, 'show_config_form']);
     }
+
+    function show_about_plugin() {
+      $html = "<h1>カスタムバナー</h1>";
+      $html .= "<p>トップページに表示するバナーを指定できます</p>";
+
+      echo $html;
+    }
+
+    function show_config_form() {
+?>
+        <h1>カスタムバナーの設定</h1>
+<?php
+    }
+
 
 } // end of class
 ?>
