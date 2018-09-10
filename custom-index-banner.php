@@ -15,6 +15,7 @@ class CustomIndexBanner
 {
     const VERSION           = '1.0.0';
     const PLUGIN_ID         = 'custom-index-banner';
+    const CONFIG_MENU_SLUG  = self::PLUGIN_ID . '-config';
     const CREDENTIAL_ACTION = self::PLUGIN_ID . '-nonce-action';
     const CREDENTIAL_NAME   = self::PLUGIN_ID . '-nonce-key';
     const PLUGIN_DB_PREFIX  = self::PLUGIN_ID . '_';
@@ -31,6 +32,8 @@ class CustomIndexBanner
             add_action('admin_menu', [$this, 'set_plugin_menu']);
             add_action('admin_menu', [$this, 'set_plugin_sub_menu']);
 
+            // コールバック関数定義
+            add_action('admin_init', [$this, 'save_config']);
         }
     }
 
@@ -87,7 +90,20 @@ class CustomIndexBanner
 <?php
     }
 
+    /** 設定画面の項目データベースに保存する */
+    function save_config()
+    {
+        // credentialの確認処理
+        if (isset($_POST[self::CREDENTIAL_NAME]) && $_POST[self::CREDENTIAL_NAME]) {
+            if (check_admin_referer(self::CREDENTIAL_ACTION, self::CREDENTIAL_NAME)) {
 
+                // 保存処理
+                $title = $_POST['title'];
+                update_option(self::PLUGIN_DB_PREFIX . 'title', $title);
+
+                wp_safe_redirect(menu_page_url(self::CONFIG_MENU_SLUG), false);
+            }
+        }
+    }
 }
 ?>
-
